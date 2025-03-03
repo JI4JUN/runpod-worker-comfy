@@ -1,63 +1,948 @@
 {
-  "input": {
-    "workflow": {
-      "3": {
-        "inputs": {
-          "seed": 234234,
-          "steps": 20,
-          "cfg": 8,
-          "sampler_name": "euler",
-          "scheduler": "normal",
-          "denoise": 1,
-          "model": ["4", 0],
-          "positive": ["6", 0],
-          "negative": ["7", 0],
-          "latent_image": ["5", 0]
-        },
-        "class_type": "KSampler"
-      },
-      "4": {
-        "inputs": {
-          "ckpt_name": "sd_xl_base_1.0.safetensors"
-        },
-        "class_type": "CheckpointLoaderSimple"
-      },
-      "5": {
-        "inputs": {
-          "width": 512,
-          "height": 512,
-          "batch_size": 1
-        },
-        "class_type": "EmptyLatentImage"
-      },
-      "6": {
-        "inputs": {
-          "text": "beautiful scenery nature glass bottle landscape, purple galaxy bottle,",
-          "clip": ["4", 1]
-        },
-        "class_type": "CLIPTextEncode"
-      },
-      "7": {
-        "inputs": {
-          "text": "text, watermark",
-          "clip": ["4", 1]
-        },
-        "class_type": "CLIPTextEncode"
-      },
-      "8": {
-        "inputs": {
-          "samples": ["3", 0],
-          "vae": ["4", 2]
-        },
-        "class_type": "VAEDecode"
-      },
-      "9": {
-        "inputs": {
-          "filename_prefix": "ComfyUI/test",
-          "images": ["8", 0]
-        },
-        "class_type": "SaveImage"
-      }
-    }
-  }
+	"input": {
+		"workflow": {
+			"3": {
+				"inputs": {
+					"seed": 452349729502972,
+					"steps": 25,
+					"cfg": 1,
+					"sampler_name": "euler",
+					"scheduler": "simple",
+					"denoise": 1,
+					"model": ["422", 0],
+					"positive": ["38", 0],
+					"negative": ["38", 1],
+					"latent_image": ["442", 0]
+				},
+				"class_type": "KSampler",
+				"_meta": {
+					"title": "K采样器"
+				}
+			},
+			"7": {
+				"inputs": {
+					"text": "",
+					"clip": ["34", 0]
+				},
+				"class_type": "CLIPTextEncode",
+				"_meta": {
+					"title": "CLIP文本编码"
+				}
+			},
+			"8": {
+				"inputs": {
+					"samples": ["3", 0],
+					"vae": ["32", 0]
+				},
+				"class_type": "VAEDecode",
+				"_meta": {
+					"title": "VAE解码"
+				}
+			},
+			"23": {
+				"inputs": {
+					"text": "",
+					"clip": ["34", 0]
+				},
+				"class_type": "CLIPTextEncode",
+				"_meta": {
+					"title": "CLIP文本编码"
+				}
+			},
+			"26": {
+				"inputs": {
+					"guidance": 30,
+					"conditioning": ["23", 0]
+				},
+				"class_type": "FluxGuidance",
+				"_meta": {
+					"title": "Flux引导"
+				}
+			},
+			"32": {
+				"inputs": {
+					"vae_name": "ae.sft"
+				},
+				"class_type": "VAELoader",
+				"_meta": {
+					"title": "加载VAE"
+				}
+			},
+			"34": {
+				"inputs": {
+					"clip_name1": "clip_l.safetensors",
+					"clip_name2": "t5xxl_fp8_e4m3fn.safetensors",
+					"type": "flux",
+					"device": "default"
+				},
+				"class_type": "DualCLIPLoader",
+				"_meta": {
+					"title": "双CLIP加载器"
+				}
+			},
+			"38": {
+				"inputs": {
+					"noise_mask": false,
+					"positive": ["421", 0],
+					"negative": ["107", 0],
+					"vae": ["32", 0],
+					"pixels": ["58", 0],
+					"mask": ["51", 0]
+				},
+				"class_type": "InpaintModelConditioning",
+				"_meta": {
+					"title": "内补模型条件"
+				}
+			},
+			"51": {
+				"inputs": {
+					"expand": 15,
+					"incremental_expandrate": 5,
+					"tapered_corners": true,
+					"flip_input": false,
+					"blur_radius": 4,
+					"lerp_alpha": 1,
+					"decay_factor": 1,
+					"fill_holes": false,
+					"mask": ["79", 0]
+				},
+				"class_type": "GrowMaskWithBlur",
+				"_meta": {
+					"title": "Grow Mask With Blur"
+				}
+			},
+			"58": {
+				"inputs": {
+					"direction": "right",
+					"match_image_size": true,
+					"image1": ["216", 0],
+					"image2": ["217", 0]
+				},
+				"class_type": "ImageConcanate",
+				"_meta": {
+					"title": "Image Concatenate"
+				}
+			},
+			"77": {
+				"inputs": {
+					"mask": ["78", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"78": {
+				"inputs": {
+					"value": 1,
+					"width": ["216", 3],
+					"height": ["216", 4]
+				},
+				"class_type": "SolidMask",
+				"_meta": {
+					"title": "纯块遮罩"
+				}
+			},
+			"79": {
+				"inputs": {
+					"mask1": ["123", 0],
+					"mask2": ["92", 0]
+				},
+				"class_type": "SubtractMask",
+				"_meta": {
+					"title": "Pixelwise(MASK - MASK)"
+				}
+			},
+			"80": {
+				"inputs": {
+					"mask": ["51", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"81": {
+				"inputs": {
+					"value": 0,
+					"width": ["217", 3],
+					"height": ["217", 4]
+				},
+				"class_type": "SolidMask",
+				"_meta": {
+					"title": "纯块遮罩"
+				}
+			},
+			"83": {
+				"inputs": {
+					"mask": ["81", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"86": {
+				"inputs": {
+					"mask": ["78", 0]
+				},
+				"class_type": "MaskToImage",
+				"_meta": {
+					"title": "遮罩转换为图像"
+				}
+			},
+			"87": {
+				"inputs": {
+					"mask": ["81", 0]
+				},
+				"class_type": "MaskToImage",
+				"_meta": {
+					"title": "遮罩转换为图像"
+				}
+			},
+			"90": {
+				"inputs": {
+					"direction": "left",
+					"match_image_size": true,
+					"image1": ["87", 0],
+					"image2": ["86", 0]
+				},
+				"class_type": "ImageConcanate",
+				"_meta": {
+					"title": "Image Concatenate"
+				}
+			},
+			"92": {
+				"inputs": {
+					"channel": "red",
+					"image": ["94", 0]
+				},
+				"class_type": "ImageToMask",
+				"_meta": {
+					"title": "图像转换为遮罩"
+				}
+			},
+			"94": {
+				"inputs": {
+					"width": ["156", 0],
+					"height": ["156", 1],
+					"interpolation": "nearest",
+					"method": "stretch",
+					"condition": "always",
+					"multiple_of": 0,
+					"image": ["90", 0]
+				},
+				"class_type": "ImageResize+",
+				"_meta": {
+					"title": "🔧 Image Resize"
+				}
+			},
+			"107": {
+				"inputs": {
+					"conditioning": ["7", 0]
+				},
+				"class_type": "ConditioningZeroOut",
+				"_meta": {
+					"title": "条件零化"
+				}
+			},
+			"123": {
+				"inputs": {
+					"mask1": ["146", 0],
+					"mask2": ["436", 0]
+				},
+				"class_type": "AddMask",
+				"_meta": {
+					"title": "Pixelwise(MASK + MASK)"
+				}
+			},
+			"130": {
+				"inputs": {
+					"detail_method": "VITMatte",
+					"detail_erode": 8,
+					"detail_dilate": 6,
+					"black_point": 0.01,
+					"white_point": 0.99,
+					"process_detail": true,
+					"device": "cuda",
+					"max_megapixels": 2,
+					"image": ["216", 0],
+					"segformer_pipeline": ["754", 0]
+				},
+				"class_type": "LayerMask: SegformerUltraV2",
+				"_meta": {
+					"title": "LayerMask: Segformer Ultra V2"
+				}
+			},
+			"131": {
+				"inputs": {
+					"mask": ["123", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"132": {
+				"inputs": {
+					"model": "segformer_b3_fashion",
+					"shirt": false,
+					"top": false,
+					"sweater": false,
+					"cardigan": false,
+					"jacket": false,
+					"vest": false,
+					"pants": false,
+					"shorts": false,
+					"skirt": false,
+					"coat": false,
+					"dress": false,
+					"jumpsuit": false,
+					"cape": false,
+					"glasses": false,
+					"hat": false,
+					"hairaccessory": false,
+					"tie": false,
+					"glove": false,
+					"watch": false,
+					"belt": false,
+					"legwarmer": false,
+					"tights": false,
+					"sock": false,
+					"shoe": false,
+					"bagwallet": false,
+					"scarf": false,
+					"umbrella": false,
+					"hood": false,
+					"collar": false,
+					"lapel": false,
+					"epaulette": false,
+					"sleeve": false,
+					"pocket": false,
+					"neckline": false,
+					"buckle": false,
+					"zipper": false,
+					"applique": false,
+					"bead": false,
+					"bow": false,
+					"flower": false,
+					"fringe": false,
+					"ribbon": false,
+					"rivet": false,
+					"ruffle": false,
+					"sequin": false,
+					"tassel": false
+				},
+				"class_type": "LayerMask: SegformerFashionPipelineLoader",
+				"_meta": {
+					"title": "LayerMask: Segformer Fashion Pipeline"
+				}
+			},
+			"133": {
+				"inputs": {
+					"detail_method": "VITMatte",
+					"detail_erode": 8,
+					"detail_dilate": 6,
+					"black_point": 0.01,
+					"white_point": 0.99,
+					"process_detail": true,
+					"device": "cuda",
+					"max_megapixels": 2,
+					"image": ["217", 0],
+					"segformer_pipeline": ["754", 0]
+				},
+				"class_type": "LayerMask: SegformerUltraV2",
+				"_meta": {
+					"title": "LayerMask: Segformer Ultra V2"
+				}
+			},
+			"141": {
+				"inputs": {
+					"mask": ["146", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"143": {
+				"inputs": {
+					"left": 0,
+					"top": 0,
+					"right": ["217", 3],
+					"bottom": 0,
+					"feathering": 0,
+					"image": ["437", 0],
+					"mask": ["284", 0]
+				},
+				"class_type": "ImagePadForOutpaintMasked",
+				"_meta": {
+					"title": "Image Pad For Outpaint Masked"
+				}
+			},
+			"146": {
+				"inputs": {
+					"mask": ["143", 1]
+				},
+				"class_type": "InvertMask",
+				"_meta": {
+					"title": "反转遮罩"
+				}
+			},
+			"148": {
+				"inputs": {
+					"size": "custom",
+					"custom_width": 512,
+					"custom_height": 512,
+					"color": "#000000",
+					"size_as": ["216", 0]
+				},
+				"class_type": "LayerUtility: ColorImage V2",
+				"_meta": {
+					"title": "LayerUtility: ColorImage V2"
+				}
+			},
+			"151": {
+				"inputs": {
+					"mask": ["436", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"156": {
+				"inputs": {
+					"image": ["58", 0]
+				},
+				"class_type": "easy imageSize",
+				"_meta": {
+					"title": "图像尺寸"
+				}
+			},
+			"159": {
+				"inputs": {
+					"width": ["217", 3],
+					"height": ["217", 4],
+					"position": "top-left",
+					"x_offset": ["216", 3],
+					"y_offset": 0,
+					"image": ["8", 0]
+				},
+				"class_type": "ImageCrop+",
+				"_meta": {
+					"title": "🔧 Image Crop"
+				}
+			},
+			"161": {
+				"inputs": {
+					"image1_text": "image1",
+					"image2_text": "SUBJECT",
+					"image3_text": "image3",
+					"image4_text": "image4",
+					"reel_height": 768,
+					"border": 8,
+					"image1": ["216", 0],
+					"image2": ["217", 0]
+				},
+				"class_type": "LayerUtility: ImageReel",
+				"_meta": {
+					"title": "LayerUtility: Image Reel"
+				}
+			},
+			"162": {
+				"inputs": {
+					"font_file": "Alibaba-PuHuiTi-Heavy.ttf",
+					"font_size": 20,
+					"border": 8,
+					"color_theme": "light",
+					"reel_1": ["161", 0],
+					"reel_2": ["164", 0]
+				},
+				"class_type": "LayerUtility: ImageReelComposit",
+				"_meta": {
+					"title": "LayerUtility: Image Reel Composit"
+				}
+			},
+			"164": {
+				"inputs": {
+					"image1_text": "DRESS",
+					"image2_text": "UPSCAL",
+					"image3_text": "image3",
+					"image4_text": "image4",
+					"reel_height": 1024,
+					"border": 8,
+					"image1": ["159", 0]
+				},
+				"class_type": "LayerUtility: ImageReel",
+				"_meta": {
+					"title": "LayerUtility: Image Reel"
+				}
+			},
+			"166": {
+				"inputs": {
+					"image": ["435", 0]
+				},
+				"class_type": "easy imageSize",
+				"_meta": {
+					"title": "图像尺寸"
+				}
+			},
+			"173": {
+				"inputs": {
+					"filename_prefix": "Mixlab",
+					"metadata": "disable",
+					"images": ["398", 0]
+				},
+				"class_type": "SaveImageAndMetadata_",
+				"_meta": {
+					"title": "Save Image Output ♾️Mixlab"
+				}
+			},
+			"216": {
+				"inputs": {
+					"aspect_ratio": "original",
+					"proportional_width": 1,
+					"proportional_height": 1,
+					"fit": "letterbox",
+					"method": "lanczos",
+					"round_to_multiple": "None",
+					"scale_to_side": "height",
+					"scale_to_length": ["608", 0],
+					"background_color": "#000000",
+					"image": ["759", 0],
+					"mask": ["759", 1]
+				},
+				"class_type": "LayerUtility: ImageScaleByAspectRatio V2",
+				"_meta": {
+					"title": "LayerUtility: ImageScaleByAspectRatio V2"
+				}
+			},
+			"217": {
+				"inputs": {
+					"aspect_ratio": "original",
+					"proportional_width": 1,
+					"proportional_height": 1,
+					"fit": "letterbox",
+					"method": "lanczos",
+					"round_to_multiple": "None",
+					"scale_to_side": "height",
+					"scale_to_length": ["608", 0],
+					"background_color": "#000000",
+					"image": ["760", 0],
+					"mask": ["760", 1]
+				},
+				"class_type": "LayerUtility: ImageScaleByAspectRatio V2",
+				"_meta": {
+					"title": "LayerUtility: ImageScaleByAspectRatio V2"
+				}
+			},
+			"226": {
+				"inputs": {
+					"mask": ["146", 0]
+				},
+				"class_type": "MaskToImage",
+				"_meta": {
+					"title": "遮罩转换为图像"
+				}
+			},
+			"228": {
+				"inputs": {
+					"left": 0,
+					"top": 0,
+					"right": ["217", 3],
+					"bottom": 0,
+					"feathering": 0,
+					"image": ["226", 0]
+				},
+				"class_type": "ImagePadForOutpaintMasked",
+				"_meta": {
+					"title": "Image Pad For Outpaint Masked"
+				}
+			},
+			"281": {
+				"inputs": {
+					"anything": ["436", 0]
+				},
+				"class_type": "easy cleanGpuUsed",
+				"_meta": {
+					"title": "清理显存占用"
+				}
+			},
+			"282": {
+				"inputs": {
+					"anything": ["146", 0]
+				},
+				"class_type": "easy cleanGpuUsed",
+				"_meta": {
+					"title": "清理显存占用"
+				}
+			},
+			"284": {
+				"inputs": {
+					"any_01": ["130", 1]
+				},
+				"class_type": "Any Switch (rgthree)",
+				"_meta": {
+					"title": "Any Switch (rgthree)"
+				}
+			},
+			"299": {
+				"inputs": {
+					"mask": ["284", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"398": {
+				"inputs": {
+					"direction": "right",
+					"match_image_size": true,
+					"image1": ["162", 0],
+					"image2": ["402", 0]
+				},
+				"class_type": "ImageConcanate",
+				"_meta": {
+					"title": "Image Concatenate"
+				}
+			},
+			"401": {
+				"inputs": {
+					"image1_text": "FINALLY",
+					"image2_text": "UPSCAL",
+					"image3_text": "image3",
+					"image4_text": "image4",
+					"reel_height": 2048,
+					"border": 8,
+					"image1": ["445", 0]
+				},
+				"class_type": "LayerUtility: ImageReel",
+				"_meta": {
+					"title": "LayerUtility: Image Reel"
+				}
+			},
+			"402": {
+				"inputs": {
+					"font_file": "Alibaba-PuHuiTi-Heavy.ttf",
+					"font_size": 40,
+					"border": 8,
+					"color_theme": "light",
+					"reel_1": ["401", 0]
+				},
+				"class_type": "LayerUtility: ImageReelComposit",
+				"_meta": {
+					"title": "LayerUtility: Image Reel Composit"
+				}
+			},
+			"421": {
+				"inputs": {
+					"strength": 1,
+					"strength_type": "multiply",
+					"conditioning": ["26", 0],
+					"style_model": ["425", 0],
+					"clip_vision_output": ["424", 0]
+				},
+				"class_type": "StyleModelApply",
+				"_meta": {
+					"title": "应用风格模型"
+				}
+			},
+			"422": {
+				"inputs": {
+					"unet_name": "flux1-fill-dev.safetensors",
+					"weight_dtype": "default"
+				},
+				"class_type": "UNETLoader",
+				"_meta": {
+					"title": "UNet加载器"
+				}
+			},
+			"423": {
+				"inputs": {
+					"clip_name": "sigclip_vision_patch14_384.safetensors"
+				},
+				"class_type": "CLIPVisionLoader",
+				"_meta": {
+					"title": "加载CLIP视觉"
+				}
+			},
+			"424": {
+				"inputs": {
+					"crop": "none",
+					"clip_vision": ["423", 0],
+					"image": ["457", 0]
+				},
+				"class_type": "CLIPVisionEncode",
+				"_meta": {
+					"title": "CLIP视觉编码"
+				}
+			},
+			"425": {
+				"inputs": {
+					"style_model_name": "flux1-redux-dev.safetensors"
+				},
+				"class_type": "StyleModelLoader",
+				"_meta": {
+					"title": "加载风格模型"
+				}
+			},
+			"431": {
+				"inputs": {
+					"images": ["58", 0]
+				},
+				"class_type": "PreviewImage",
+				"_meta": {
+					"title": "预览图像"
+				}
+			},
+			"433": {
+				"inputs": {
+					"image": "780d000ba808f92e992c6d35f0dc4c87eba6bf63fdaaa15f9924fe8222c0b702.jpg",
+					"upload": "image"
+				},
+				"class_type": "LoadImage",
+				"_meta": {
+					"title": "加载图像"
+				}
+			},
+			"435": {
+				"inputs": {
+					"left": ["216", 3],
+					"top": 0,
+					"right": 0,
+					"bottom": 0,
+					"feathering": 0,
+					"image": ["148", 0],
+					"mask": ["133", 1]
+				},
+				"class_type": "ImagePadForOutpaintMasked",
+				"_meta": {
+					"title": "Image Pad For Outpaint Masked"
+				}
+			},
+			"436": {
+				"inputs": {
+					"mask": ["435", 1]
+				},
+				"class_type": "InvertMask",
+				"_meta": {
+					"title": "反转遮罩"
+				}
+			},
+			"437": {
+				"inputs": {
+					"size": "custom",
+					"custom_width": 512,
+					"custom_height": 512,
+					"color": "#000000",
+					"size_as": ["217", 0]
+				},
+				"class_type": "LayerUtility: ColorImage V2",
+				"_meta": {
+					"title": "LayerUtility: ColorImage V2"
+				}
+			},
+			"438": {
+				"inputs": {
+					"size": "custom",
+					"custom_width": 512,
+					"custom_height": 512,
+					"color": "#FFFFFF",
+					"size_as": ["217", 0]
+				},
+				"class_type": "LayerUtility: ColorImage V2",
+				"_meta": {
+					"title": "LayerUtility: ColorImage V2"
+				}
+			},
+			"442": {
+				"inputs": {
+					"batch_size": 1,
+					"latent": ["38", 2]
+				},
+				"class_type": "CR Latent Batch Size",
+				"_meta": {
+					"title": "⚙️ CR Latent Batch Size"
+				}
+			},
+			"445": {
+				"inputs": {
+					"any_03": ["159", 0]
+				},
+				"class_type": "Any Switch (rgthree)",
+				"_meta": {
+					"title": "Any Switch (rgthree)"
+				}
+			},
+			"453": {
+				"inputs": {
+					"mask": ["51", 0]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"455": {
+				"inputs": {
+					"fill_background": true,
+					"background_color": "#FFFFFF",
+					"RGBA_image": ["457", 0],
+					"mask": ["457", 1]
+				},
+				"class_type": "LayerUtility: ImageRemoveAlpha",
+				"_meta": {
+					"title": "LayerUtility: ImageRemoveAlpha"
+				}
+			},
+			"456": {
+				"inputs": {
+					"images": ["455", 0]
+				},
+				"class_type": "PreviewImage",
+				"_meta": {
+					"title": "预览图像"
+				}
+			},
+			"457": {
+				"inputs": {
+					"invert_mask": false,
+					"detect": "mask_area",
+					"top_reserve": 20,
+					"bottom_reserve": 20,
+					"left_reserve": 20,
+					"right_reserve": 20,
+					"round_to_multiple": "8",
+					"image": ["216", 0],
+					"mask": ["284", 0]
+				},
+				"class_type": "LayerUtility: CropByMask V2",
+				"_meta": {
+					"title": "LayerUtility: CropByMask V2"
+				}
+			},
+			"458": {
+				"inputs": {
+					"images": ["457", 0]
+				},
+				"class_type": "PreviewImage",
+				"_meta": {
+					"title": "预览图像"
+				}
+			},
+			"506": {
+				"inputs": {
+					"filename_prefix": "Mixlab",
+					"metadata": "disable",
+					"images": ["159", 0]
+				},
+				"class_type": "SaveImageAndMetadata_",
+				"_meta": {
+					"title": "Save Image Output ♾️Mixlab"
+				}
+			},
+			"577": {
+				"inputs": {
+					"mask": ["133", 1]
+				},
+				"class_type": "MaskPreview+",
+				"_meta": {
+					"title": "🔧 Mask Preview"
+				}
+			},
+			"591": {
+				"inputs": {
+					"images": ["216", 0]
+				},
+				"class_type": "PreviewImage",
+				"_meta": {
+					"title": "预览图像"
+				}
+			},
+			"592": {
+				"inputs": {
+					"images": ["130", 0]
+				},
+				"class_type": "PreviewImage",
+				"_meta": {
+					"title": "预览图像"
+				}
+			},
+			"593": {
+				"inputs": {
+					"images": ["133", 0]
+				},
+				"class_type": "PreviewImage",
+				"_meta": {
+					"title": "预览图像"
+				}
+			},
+			"602": {
+				"inputs": {
+					"images": ["8", 0]
+				},
+				"class_type": "PreviewImage",
+				"_meta": {
+					"title": "预览图像"
+				}
+			},
+			"608": {
+				"inputs": {
+					"Number": 1280
+				},
+				"class_type": "Int",
+				"_meta": {
+					"title": "Int"
+				}
+			},
+			"754": {
+				"inputs": {
+					"model": "segformer_b3_clothes",
+					"face": false,
+					"hair": false,
+					"hat": false,
+					"sunglass": false,
+					"left_arm": false,
+					"right_arm": false,
+					"left_leg": false,
+					"right_leg": false,
+					"left_shoe": false,
+					"right_shoe": false,
+					"upper_clothes": false,
+					"skirt": false,
+					"pants": false,
+					"dress": false,
+					"belt": false,
+					"bag": false,
+					"scarf": false
+				},
+				"class_type": "LayerMask: SegformerClothesPipelineLoader",
+				"_meta": {
+					"title": "LayerMask: Segformer Clothes Pipeline"
+				}
+			},
+			"759": {
+				"inputs": {
+					"image": "10.jpg",
+					"upload": "image"
+				},
+				"class_type": "LoadImage",
+				"_meta": {
+					"title": "加载图像"
+				}
+			},
+			"760": {
+				"inputs": {
+					"image": "4.jpg",
+					"upload": "image"
+				},
+				"class_type": "LoadImage",
+				"_meta": {
+					"title": "加载图像"
+				}
+			}
+		}
+	}
 }
