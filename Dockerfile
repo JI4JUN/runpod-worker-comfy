@@ -81,26 +81,24 @@ RUN if [ "$MODEL_TYPE" = "sdxl" ]; then \
   elif [ "$MODEL_TYPE" = "flux1-dev" ]; then \
   # Change Clohtes
   # Custom Nodes
-  git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git /comfyui/custom_nodes && \
-  git clone https://github.com/chflame163/ComfyUI_LayerStyle.git /comfyui/custom_nodes && \
-  git clone https://github.com/rgthree/rgthree-comfy.git /comfyui/custom_nodes && \
-  git clone https://github.com/yolain/ComfyUI-Easy-Use.git /comfyui/custom_nodes && \
-  git clone https://github.com/cubiq/ComfyUI_essentials.git /comfyui/custom_nodes && \
-  git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git /comfyui/custom_nodes && \
-  git clone https://github.com/M1kep/ComfyLiterals.git /comfyui/custom_nodes && \
+  git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git custom_nodes/ComfyUI-Impact-Pack && \
+  git clone https://github.com/chflame163/ComfyUI_LayerStyle.git custom_nodes/ComfyUI_LayerStyle && \
+  git clone https://github.com/rgthree/rgthree-comfy.git custom_nodes/rgthree-comfy && \
+  git clone https://github.com/yolain/ComfyUI-Easy-Use.git custom_nodes/ComfyUI-Easy-Use && \
+  git clone https://github.com/cubiq/ComfyUI_essentials.git custom_nodes/ComfyUI_essentials && \
+  git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git custom_nodes/ComfyUI_Comfyroll_CustomNodes && \
+  git clone https://github.com/M1kep/ComfyLiterals.git custom_nodes/ComfyLiterals && \
   # Additional models
-  git clone https://huggingface.co/sayeed99/segformer_b3_clothes /comfyui/models && \
-  git clone https://huggingface.co/google/siglip-so400m-patch14-384 /comfyui/models/clip && \
-  git clone https://huggingface.co/hustvl/vitmatte-small-composition-1k /comfyui/models/vitmatte && \
+  git clone https://huggingface.co/sayeed99/segformer_b3_clothes models/segformer_b3_clothes && \
+  git clone https://huggingface.co/google/siglip-so400m-patch14-384 models/clip/siglip-so400m-patch14-384 && \
+  git clone https://huggingface.co/hustvl/vitmatte-small-composition-1k models/vitmatte && \
   wget -O models/style_models/flux1-redux-dev.safetensors https://huggingface.co/second-state/FLUX.1-Redux-dev-GGUF/blob/main/flux1-redux-dev.safetensors -t 0 -c && \
   wget --header="Authorization: Bearer ${HUGGINGFACE_ACCESS_TOKEN}" -O models/unet/flux1-dev.safetensors https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors -t 0 -c && \
   wget -O models/clip/clip_l.safetensors https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors && \
   wget -O models/clip/t5xxl_fp8_e4m3fn.safetensors https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors && \
-  wget --header="Authorization: Bearer ${HUGGINGFACE_ACCESS_TOKEN}" -O models/vae/ae.safetensors https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/ae.safetensors; \
+  wget --header="Authorization: Bearer ${HUGGINGFACE_ACCESS_TOKEN}" -O models/vae/ae.stf https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/ae.safetensors; \
   fi
 
-# Copy the ae.safetensors file to ae.sft
-COPY /comfyui/models/vae/ae.safetensors /comfyui/models/vae/ae.sft
 
 # Stage 3: Final image
 FROM base as final
