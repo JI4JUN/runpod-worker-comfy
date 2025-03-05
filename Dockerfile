@@ -89,44 +89,30 @@ RUN if [ "$MODEL_TYPE" = "flux1-dev" ]; then \
   wget -O models/clip/clip_l.safetensors https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors && \
   wget -O models/clip/t5xxl_fp8_e4m3fn.safetensors https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors && \
   wget --header="Authorization: Bearer ${HUGGINGFACE_ACCESS_TOKEN}" -O models/vae/ae.sft https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/ae.safetensors && \
-  wget --header="Authorization: Bearer ${HUGGINGFACE_ACCESS_TOKEN}" -O models/unet/flux1-dev.safetensors https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors; \
+  wget --header="Authorization: Bearer ${HUGGINGFACE_ACCESS_TOKEN}" -O models/unet/flux1-dev.safetensors https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors &&\
+  # Additional models
+  git clone https://huggingface.co/sayeed99/segformer_b3_clothes /comfyui/models/segformer_b3_clothes && \
+  git clone https://huggingface.co/google/siglip-so400m-patch14-384 /comfyui/models/clip/siglip-so400m-patch14-384 && \
+  git clone https://huggingface.co/hustvl/vitmatte-small-composition-1k /comfyui/models/vitmatte; \
   fi
-
-FROM base as custom_nodes
-
-# Change working directory to ComfyUI
-WORKDIR /comfyui
-
-# Change Clohtes
 # Custom Nodes
 RUN git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git /comfyui/custom_nodes/ComfyUI-Impact-Pack
-WORKDIR /comfyui/custom_nodes/ComfyUI-Impact-Pack
-RUN pip3 install -r requirements.txt
-
+WORKDIR /comfyui/custom_nodes/ComfyUI-Impact-Pack 
+RUN pip3 install -r requirements.txt 
 RUN git clone https://github.com/chflame163/ComfyUI_LayerStyle.git /comfyui/custom_nodes/ComfyUI_LayerStyle
 WORKDIR /comfyui/custom_nodes/ComfyUI_LayerStyle
 RUN pip3 install -r requirements.txt
-
-RUN git clone https://github.com/rgthree/rgthree-comfy.git /comfyui/custom_nodes/rgthree-comfy
-WORKDIR /comfyui/custom_nodes/rgthree-comfy
-RUN pip3 install -r requirements.txt
-
+RUN git clone https://github.com/rgthree/rgthree-comfy.git /comfyui/custom_nodes/rgthree-comfy 
+WORKDIR /comfyui/custom_nodes/rgthree-comfy 
+RUN pip3 install -r requirements.txt 
 RUN git clone https://github.com/yolain/ComfyUI-Easy-Use.git /comfyui/custom_nodes/ComfyUI-Easy-Use
-WORKDIR /comfyui/custom_nodes/ComfyUI-Easy-Use
-RUN pip3 install -r requirements.txt
-
-RUN git clone https://github.com/cubiq/ComfyUI_essentials.git /comfyui/custom_nodes/ComfyUI_essentials
-WORKDIR /comfyui/custom_nodes/ComfyUI_essentials
-RUN pip3 install -r requirements.txt
-
+WORKDIR /comfyui/custom_nodes/ComfyUI-Easy-Use 
+RUN pip3 install -r requirements.txt 
+RUN git clone https://github.com/cubiq/ComfyUI_essentials.git /comfyui/custom_nodes/ComfyUI_essentials 
+WORKDIR /comfyui/custom_nodes/ComfyUI_essentials 
+RUN pip3 install -r requirements.txt 
 RUN git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git /comfyui/custom_nodes/ComfyUI_Comfyroll_CustomNodes
-
 RUN git clone https://github.com/M1kep/ComfyLiterals.git /comfyui/custom_nodes/ComfyLiterals
-
-# Additional models
-RUN git clone https://huggingface.co/sayeed99/segformer_b3_clothes /comfyui/models/segformer_b3_clothes
-RUN git clone https://huggingface.co/google/siglip-so400m-patch14-384 /comfyui/models/clip/siglip-so400m-patch14-384
-RUN git clone https://huggingface.co/hustvl/vitmatte-small-composition-1k /comfyui/models/vitmatte
 
 # Stage 3: Final image
 FROM base as final
@@ -134,6 +120,7 @@ FROM base as final
 # Copy models from stage 2 to the final image
 COPY --from=downloader /comfyui/models /comfyui/models
 COPY --from=downloader /comfyui/custom_nodes /comfyui/custom_nodes
+
 
 # Start container
 CMD ["/start.sh"]
