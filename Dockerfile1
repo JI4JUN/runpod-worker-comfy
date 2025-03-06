@@ -57,8 +57,8 @@ CMD ["/start.sh"]
 # Stage 2: Download models
 FROM base as downloader
 
-ARG HUGGINGFACE_ACCESS_TOKEN=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
-ARG MODEL_TYPE=flux1-dev
+ARG HUGGINGFACE_ACCESS_TOKEN=
+ARG MODEL_TYPE=
 
 # Change working directory to ComfyUI
 WORKDIR /comfyui
